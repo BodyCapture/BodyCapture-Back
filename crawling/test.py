@@ -85,7 +85,7 @@ for btn in range(len(next_btn))[1:]:  # next_btn[0] = 이전 페이지 버튼 (�
             address_buttons.__getitem__(data).click()
             sleep(1)
 
-            # 주소 눌렀을 때 도로명 나오는 div
+            # 주소 눌렀을 때 도로명 나오는 span
             addr = driver.find_element(By.CSS_SELECTOR, '.AbTyi > span')
 
             # 도로명 주소 저장
@@ -101,7 +101,8 @@ for btn in range(len(next_btn))[1:]:  # next_btn[0] = 이전 페이지 버튼 (�
             print(f'{store_name} ...완료')
 
             sleep(1)
-
+        
+        # 에러 발생 시 (현재 list range 에러 발생)
         except Exception as e:
             print(e)
             print('ERROR!' * 3)
