@@ -1,3 +1,5 @@
+## 동적인 작업이 필요해서 이 코드는 사용 불가
+
 import pandas as pd
 import requests
 import selenium
