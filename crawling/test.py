@@ -86,18 +86,15 @@ for btn in range(len(next_btn))[1:]:  # next_btn[0] = 이전 페이지 버튼 (�
             sleep(1)
 
             # 주소 눌렀을 때 도로명 나오는 span
-            addr = driver.find_element(By.CSS_SELECTOR, '.AbTyi > span')
-
             # 도로명 주소 저장
-            road_elem = addr[0]  # 첫 번째 요소 선택
-            road_address = road_elem.text
-            last_index = road_address.find('복사우\n')
-            road_address = road_address[3:last_index]
+            first_span_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, '.zZfO1')))
+            first_span_text = first_span_element.text
+            road_address = first_span_text[3:-2]
             print("도로명 주소:", road_address)
 
-
             # 딕셔너리에 데이터 추가
-            store_data.append({'상호명': store_name, '주소': road_address})
+            store_data.append({'상호명': store_name, '주소': road_address, '지역' : '경기도'})
             print(f'{store_name} ...완료')
 
             sleep(1)
@@ -112,13 +109,12 @@ for btn in range(len(next_btn))[1:]:  # next_btn[0] = 이전 페이지 버튼 (�
             
     if names[-1]:  # 마지막 리스트면 다음 페이지
         next_btn[-1].click()
-
         sleep(2)
 
     else:
         print('페이지 인식 못함')
         break
-      
+        
     # 다음 페이지 버튼 누를 수 없으면 종료
     if not next_btn[-1].is_enabled():
         break
