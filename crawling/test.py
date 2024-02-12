@@ -126,7 +126,7 @@ def search_data(key_word) :
                 road_address = ''
                 phone_number = ''
                 links = []
-                image_url = ''
+                image_urls = []
                 store_type = ''
                 
                 # 가게 종류
@@ -175,25 +175,38 @@ def search_data(key_word) :
                 except Exception as ee :
                     print('링크 에러발생 : ', ee)
                     links = 'None'
-                    
+
                 # 이미지 가져오기
                 try:
-                    image_divs = path_search(30, '//*[@id="ibu_1"]')
+                    # 이미지를 포함한 div 요소 찾기
+                    image_divs = driver.find_elements(By.CSS_SELECTOR, 'div.K0PDV._div')
+
+                    # 이미지가 있는 경우
                     if image_divs:
-                        first_image_div = image_divs
-                        style = first_image_div.get_attribute('style')
-                        if style:
+                        for i, image_div in enumerate(image_divs, start=1):  # 시작 인덱스를 1로 지정
+                            # 이미지 URL 추출
+                            style = image_div.get_attribute('style')
                             url_start_index = style.find('url("') + len('url("')
                             url_end_index = style.find('")', url_start_index)
                             image_url = style[url_start_index:url_end_index]
-                        else:
-                            image_url = 'None'
-                        print("첫 번째 이미지 URL:", image_url)
+                            image_urls.append(image_url)
+
+                            # 이미지가 세 개 이상인 경우 루프 중단
+                            if i == 3:
+                                break
+
+                        # 이미지가 없는 경우
                     else:
-                        print("이미지 없음")
+                        image_urls = 'None'
+
+                    # 각 이미지 URL 출력
+                    for idx, url in enumerate(image_urls, start=1):
+                        print(f"이미지 URL {idx}번째 :", url)
+
+                # 에러 발생 시 처리
                 except Exception as e:
                     print("이미지 URL 추출 중 오류 발생:", e)
-                    image_url = 'None'
+                    image_urls = 'None'
 
 
 
@@ -211,7 +224,7 @@ def search_data(key_word) :
                     '주소' : road_address, 
                     '전화번호' : phone_number,
                     '링크' : links, 
-                    '이미지' : image_url,
+                    '이미지' : image_urls,
                     '지역' : key_word} 
                 store_data.append(store_value)
                 
