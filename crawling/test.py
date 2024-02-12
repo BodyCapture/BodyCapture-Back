@@ -217,7 +217,7 @@ def search_data(key_word) :
             print('페이지 인식 못함')
             break
         
-        if counting > 4 :   # 최대 3페이지까지만 서치하기 위해
+        if counting > 3 :   # 최대 3페이지까지만 서치하기 위해
             break
         
     # 딕셔너리를 JSON 파일로 저장 
