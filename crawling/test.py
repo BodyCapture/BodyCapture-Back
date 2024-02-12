@@ -53,35 +53,42 @@ def page_down(num):
         body.send_keys(Keys.PAGE_DOWN)
 
 # csv파일 만들기
-def add_file(key_word) :
-    df = pd.read_json(f'./store_data.json')
-    df.index = df.index + 1
+def add_file(key_word):
+    # JSON 파일을 데이터프레임으로 읽기
+    df = pd.read_json('./store_data.json')
     
-    # csv파일로 저장
+    # 데이터프레임을 CSV 파일로 저장 (임시 파일)
     csv_filename = f'{key_word} 바디프로필 임시.csv'
-    df.to_csv(csv_filename, encoding = 'euc-kr')
+    df.to_csv(csv_filename, encoding='euc-kr', index=False)
     print(f'============={key_word} 바디프로필 csv파일 완성=============')
 
-    # CSV 파일을 읽기
-    df = pd.read_csv(f'{key_word} 바디프로필 임시.csv', encoding='euc-kr')
-    # 중복된 행을 제거
+    # CSV 파일을 데이터프레임으로 읽기
+    df = pd.read_csv(csv_filename, encoding='euc-kr')
+    
+    # 중복된 행 제거
     df.drop_duplicates(subset='상호명', inplace=True)
+    
     # 스튜디오 아닌 것 제거
-    df = df[df['종류'].isin(['프로필사진전문', '사진,스튜디오' ])]
-    # 인덱스를 재설정
+    df = df[df['종류'].isin(['프로필사진전문', '사진,스튜디오'])]
+    
+    # 인덱스 번호
     df.reset_index(drop=True, inplace=True)
-    # 수정된 데이터프레임을 CSV 파일로 저장
-    df.to_csv(f'{key_word} 바디프로필.csv', index=False, encoding='euc-kr')
+    df.index += 1
+    # 수정된 데이터프레임을 CSV 파일로 저장 (최종 파일)
+    final_csv_filename = f'{key_word} 바디프로필.csv'
+    df.to_csv(final_csv_filename, encoding='euc-kr')
     print(f'============={key_word} 바디프로필 csv파일 수정 완료!!=============')
+
 
 def search_data(key_word) :
     # 딕셔너리 생성 
     store_data = [] 
+
     # css를 찾을때 까지 10초 대기
-    time_wait(10, 'div.input_box > input.input_search')
+    search = time_wait(30, 'div.input_box > input.input_search')
     
     # 검색창 
-    search = driver.find_element(By.CSS_SELECTOR, 'div.input_box > input.input_search')
+    # search = driver.find_element(By.CSS_SELECTOR, 'div.input_box > input.input_search')
     search.send_keys(f'{key_word} 바디프로필')  
     search.send_keys(Keys.ENTER)  
 
@@ -208,10 +215,6 @@ def search_data(key_word) :
                     print("이미지 URL 추출 중 오류 발생:", e)
                     image_urls = 'None'
 
-
-
-                
-                    
                 # 창 닫기
                 close_button = path_search(10, '//*[@id="app-root"]/div/div/header/a')  
                 close_button.click()  
