@@ -54,7 +54,7 @@ def page_down(num):
 
 # csv파일 만들기
 def add_file(key_word) :
-    df = pd.read_json('./store_data.json')
+    df = pd.read_json(f'./store_data.json')
     df.index = df.index + 1
     
     # csv파일로 저장
@@ -126,6 +126,7 @@ def search_data(key_word) :
                 road_address = ''
                 phone_number = ''
                 links = []
+                image_url = ''
                 store_type = ''
                 
                 # 가게 종류
@@ -166,7 +167,6 @@ def search_data(key_word) :
                 try :
                     div_link_elements = WebDriverWait(driver, 30).until(            
                         EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'div.PIbes > div.O8qbU.yIPfO > div.vV_z_ a')))
-                    links = []
                     for link_element in div_link_elements :
                         link_href = link_element.get_attribute('href')
                         links.append(link_href)
@@ -175,6 +175,28 @@ def search_data(key_word) :
                 except Exception as ee :
                     print('링크 에러발생 : ', ee)
                     links = 'None'
+                    
+                # 이미지 가져오기
+                try:
+                    image_divs = path_search(30, '//*[@id="ibu_1"]')
+                    if image_divs:
+                        first_image_div = image_divs
+                        style = first_image_div.get_attribute('style')
+                        if style:
+                            url_start_index = style.find('url("') + len('url("')
+                            url_end_index = style.find('")', url_start_index)
+                            image_url = style[url_start_index:url_end_index]
+                        else:
+                            image_url = 'None'
+                        print("첫 번째 이미지 URL:", image_url)
+                    else:
+                        print("이미지 없음")
+                except Exception as e:
+                    print("이미지 URL 추출 중 오류 발생:", e)
+                    image_url = 'None'
+
+
+
                 
                     
                 # 창 닫기
@@ -189,6 +211,7 @@ def search_data(key_word) :
                     '주소' : road_address, 
                     '전화번호' : phone_number,
                     '링크' : links, 
+                    '이미지' : image_url,
                     '지역' : key_word} 
                 store_data.append(store_value)
                 
