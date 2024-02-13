@@ -58,9 +58,9 @@ def add_file(key_word):
     df = pd.read_json('./store_data.json')
     
     # 데이터프레임을 CSV 파일로 저장 (임시 파일)
-    csv_filename = f'{key_word} 바디프로필 임시.csv'
+    csv_filename = f'{key_word} 메이크업샵 임시.csv'
     df.to_csv(csv_filename, encoding='euc-kr', index=False)
-    print(f'============={key_word} 바디프로필 csv파일 완성=============')
+    print(f'============={key_word} 메이크업샵 csv파일 완성=============')
 
     # CSV 파일을 데이터프레임으로 읽기
     df = pd.read_csv(csv_filename, encoding='euc-kr')
@@ -68,16 +68,16 @@ def add_file(key_word):
     # 중복된 행 제거
     df.drop_duplicates(subset='상호명', inplace=True)
     
-    # 스튜디오 아닌 것 제거
-    df = df[df['종류'].isin(['프로필사진전문', '사진,스튜디오'])]
+    # 아닌 것 제거
+    # df = df[df['종류'].isin(['메이크업'])]
     
     # 인덱스 번호
     df.reset_index(drop=True, inplace=True)
     df.index += 1
     # 수정된 데이터프레임을 CSV 파일로 저장 (최종 파일)
-    final_csv_filename = f'{key_word} 바디프로필.csv'
+    final_csv_filename = f'{key_word} 메이크업샵.csv'
     df.to_csv(final_csv_filename, encoding='euc-kr')
-    print(f'============={key_word} 바디프로필 csv파일 수정 완료!!=============')
+    print(f'============={key_word} 메이크업샵 csv파일 수정 완료!!=============')
 
 
 def search_data(key_word) :
@@ -95,7 +95,7 @@ def search_data(key_word) :
     search.send_keys(Keys.DELETE)          # 삭제
     
     # 검색
-    search.send_keys(f'{key_word} 바디프로필')  
+    search.send_keys(f'{key_word} 메이크업')  
     search.send_keys(Keys.ENTER)  
 
     sleep(1)
@@ -140,6 +140,11 @@ def search_data(key_word) :
                 # 가게 종류
                 store_type = store_types[data].text
                 print('type : ', store_type)
+                
+                # 메이크업샵 거르기
+                if store_type != '메이크업' :
+                    print(f'{data}번째는 메이크업샵이 아님 Pass~~')
+                    continue
                 
                 # 상세 정보 버튼 누르기
                 link_buttons.__getitem__(data*2).click()
@@ -270,7 +275,7 @@ def search_data(key_word) :
     add_file(key_word)
     
 # 실행
-for s in key_word :
+for s in key_word[2:] :
     search_data(s)
 
 
