@@ -14,7 +14,7 @@ url = 'https://map.naver.com/v5/search'
 driver = webdriver.Chrome()  # 드라이버 경로
 driver.get(url)
 key_word = ['경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도',
-            '서울', '인천', '대전', '대구', '부산', '울산', '광주', '제주']  # 지역 키워드
+            '서울', '인천', '대전', '대구', '울산', '부산', '광주', '제주']  # 지역 키워드
 
 
 def time_wait(num, code):
@@ -83,12 +83,18 @@ def add_file(key_word):
 def search_data(key_word) :
     # 딕셔너리 생성 
     store_data = [] 
-
-    # css를 찾을때 까지 10초 대기
+    
+    # 프레임 초기화
+    driver.switch_to.default_content()
+    
+    # 검색창 찾기
     search = time_wait(30, 'div.input_box > input.input_search')
     
-    # 검색창 
-    # search = driver.find_element(By.CSS_SELECTOR, 'div.input_box > input.input_search')
+    # 검색창에 기존 텍스트가 있을 경우 제거
+    search.send_keys(Keys.CONTROL + "a")  # 전체 선택
+    search.send_keys(Keys.DELETE)          # 삭제
+    
+    # 검색
     search.send_keys(f'{key_word} 바디프로필')  
     search.send_keys(Keys.ENTER)  
 
@@ -121,11 +127,6 @@ def search_data(key_word) :
         
         for data in range(len(store_list)):  
             print(data + 1)       
-            
-            # 광고 무시하기
-            # ad_search = driver.find_elements(By.CSS_SELECTOR, '.qbGlu')[data].text
-            # if '광고' in ad_search :
-            #     continue 
                 
             try:   
                 # 초기화
@@ -271,5 +272,6 @@ def search_data(key_word) :
 # 실행
 for s in key_word :
     search_data(s)
+
 
 driver.quit()  # 작업이 끝나면 창을 닫는다.
