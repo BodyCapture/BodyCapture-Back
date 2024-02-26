@@ -1,12 +1,9 @@
-import {makeupController} from './controllers/makeup.controller.js';
-// makeupRoutes.js
-const express = require('express');
-const MakeupController = require('../controllers/makeup.controller');
+import express from "express";
 
-const router = express.Router();
 
-const makeupController = new MakeupController(); // 올바른 클래스 생성 방법
+import { getAllMakeupController } from '../controllers/makeup.controller.js';
 
-router.get('/makeup', makeupController.getAllMakeup);
+export const makeupRouter = express.Router();
+console.log(getAllMakeupController); 
 
-module.exports = router;
+makeupRouter.get('/makeup', getAllMakeupController);

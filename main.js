@@ -1,13 +1,15 @@
-// const express = require('express')   // common JS
-import express from 'express'          // ES6
+// app.js
+import express from 'express';
+import makeupRoutes from './routes/makeup.route.js';
+import pool from './config/db.connect';
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
-app.get('/', function (req, res) {
-    res.send('Hello World')
-})
+// 여기에서 pool을 사용할 수 있습니다.
+
+app.use(makeupRoutes);
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+  console.log(`서버가 http://localhost:${port} 포트에서 실행 중입니다.`);
+});
