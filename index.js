@@ -8,9 +8,11 @@ import express from 'express'
 
 dotenv.config();    // .env 파일 사용 (환경 변수 관리)
 import { makeupRouter } from './src/routes/makeup.route.js';
+
+import { studioRouter } from './src/routes/studio.route.js';
 import { specs } from './config/swagger.config.js';
-// . -> 현재 디렉토리 내
-// .. -> 상위 디렉토리 내
+
+
 import { status } from "./config/response.status.js";
 import { response } from "./config/response.js";
 import SwaggerUi from 'swagger-ui-express';
@@ -26,16 +28,9 @@ app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({extended: false})); // 단순 객체 문자열 형태로 본문 데이터 해석
 
-// (...)
 
-//app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
-
-// router setting
-// app.use('/temp', tempRouter);
-// app.use('/user', userRouter);
-// app.use('/store', storeRouter);
-// app.use('/review', reviewRouter);
-app.use('/api', makeupRouter); 
+app.use('/makeup', makeupRouter); 
+app.use('/studio', studioRouter); 
 
 app.use((err, req, res, next) => {
     // 템플릿 엔진 변수 설정

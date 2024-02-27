@@ -9,7 +9,5 @@ export async function getAllMakeup() {
       const [makeupList] = await conn.query(getAllMakeupQuery);
       conn.release();
       return makeupList;
- /* } catch (error) {
-      throw new BaseError(status.PARAMETER_IS_WRONG);
-  }*/
+  
 }
